@@ -1,0 +1,15 @@
+---
+# Source: nginx/templates/server-block-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gopoc-app1-nginx-server-block
+  labels:
+    app.kubernetes.io/name: nginx
+    helm.sh/chart: nginx-8.8.4
+    app.kubernetes.io/instance: gopoc-app1
+    app.kubernetes.io/managed-by: Helm
+data:
+  server-blocks-paths.conf: |-
+    include  "/opt/bitnami/nginx/conf/server_blocks/ldap/*.conf";
+    include  "/opt/bitnami/nginx/conf/server_blocks/common/*.conf";

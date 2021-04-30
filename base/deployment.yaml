@@ -1,0 +1,81 @@
+---
+# Source: nginx/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gopoc-app1-nginx
+  labels:
+    app.kubernetes.io/name: nginx
+    helm.sh/chart: nginx-8.8.4
+    app.kubernetes.io/instance: gopoc-app1
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nginx
+      app.kubernetes.io/instance: gopoc-app1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: nginx
+        helm.sh/chart: nginx-8.8.4
+        app.kubernetes.io/instance: gopoc-app1
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      
+      serviceAccountName: default
+      affinity:
+        podAffinity:
+          
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: nginx
+                    app.kubernetes.io/instance: gopoc-app1
+                namespaces:
+                  - "default"
+                topologyKey: kubernetes.io/hostname
+              weight: 1
+        nodeAffinity:
+          
+      containers:
+        - name: nginx
+          image: docker.io/sparkfabrik/gopoc-app1:1
+          imagePullPolicy: "IfNotPresent"
+          env:
+            - name: BITNAMI_DEBUG
+              value: "false"
+          ports:
+            - name: http
+              containerPort: 8080
+          livenessProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 6
+          readinessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
+          resources:
+            limits: {}
+            requests: {}
+          volumeMounts:
+            - name: nginx-server-block-paths
+              mountPath: /opt/bitnami/nginx/conf/server_blocks
+      volumes:
+        - name: nginx-server-block-paths
+          configMap:
+            name: gopoc-app1-nginx-server-block
+            items:
+              - key: server-blocks-paths.conf
+                path: server-blocks-paths.conf

@@ -1,0 +1,25 @@
+---
+# Source: nginx/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gopoc-app1-nginx
+  labels:
+    app.kubernetes.io/name: nginx
+    helm.sh/chart: nginx-8.8.4
+    app.kubernetes.io/instance: gopoc-app1
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+    - host: app1.local
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: gopoc-app1-nginx
+                port:
+                  name: http
