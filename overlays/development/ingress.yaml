@@ -7,3 +7,12 @@ metadata:
 spec:
   rules:
     - host: development.app1.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: gopoc-app1-nginx
+                port:
+                  name: http

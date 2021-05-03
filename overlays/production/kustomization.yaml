@@ -4,5 +4,4 @@ namespace: gopoc-app1
 resources:
   - ../../base
 patchesStrategicMerge:
-  - ingress.yaml
   - deployment.yaml
