@@ -6,7 +6,7 @@ metadata:
   name: gopoc-app1-nginx
   labels:
     app.kubernetes.io/name: nginx
-    helm.sh/chart: nginx-8.8.4
+    helm.sh/chart: nginx-8.9.0
     app.kubernetes.io/instance: gopoc-app1
     app.kubernetes.io/managed-by: Helm
 spec:
@@ -19,7 +19,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: nginx
-        helm.sh/chart: nginx-8.8.4
+        helm.sh/chart: nginx-8.9.0
         app.kubernetes.io/instance: gopoc-app1
         app.kubernetes.io/managed-by: Helm
     spec:
@@ -36,14 +36,14 @@ spec:
                     app.kubernetes.io/name: nginx
                     app.kubernetes.io/instance: gopoc-app1
                 namespaces:
-                  - "default"
+                  - "gopoc-app1"
                 topologyKey: kubernetes.io/hostname
               weight: 1
         nodeAffinity:
           
       containers:
         - name: nginx
-          image: docker.io/sparkfabrik/gopoc-app1:1
+          image: docker.io/aypx/gitops-poc-app-1:latest
           imagePullPolicy: "IfNotPresent"
           env:
             - name: BITNAMI_DEBUG
@@ -72,6 +72,28 @@ spec:
           volumeMounts:
             - name: nginx-server-block-paths
               mountPath: /opt/bitnami/nginx/conf/server_blocks
+        - name: metrics
+          image: docker.io/bitnami/nginx-exporter:0.9.0-debian-10-r34
+          imagePullPolicy: "IfNotPresent"
+          command: ['/usr/bin/exporter', '-nginx.scrape-uri', 'http://127.0.0.1:8080/status']
+          ports:
+            - name: metrics
+              containerPort: 9113
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: metrics
+            initialDelaySeconds: 15
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: metrics
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+          resources:
+            limits: {}
+            requests: {}
       volumes:
         - name: nginx-server-block-paths
           configMap:

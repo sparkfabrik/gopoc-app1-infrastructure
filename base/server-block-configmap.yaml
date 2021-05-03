@@ -6,7 +6,7 @@ metadata:
   name: gopoc-app1-nginx-server-block
   labels:
     app.kubernetes.io/name: nginx
-    helm.sh/chart: nginx-8.8.4
+    helm.sh/chart: nginx-8.9.0
     app.kubernetes.io/instance: gopoc-app1
     app.kubernetes.io/managed-by: Helm
 data:

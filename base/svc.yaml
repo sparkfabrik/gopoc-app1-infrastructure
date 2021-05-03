@@ -6,15 +6,21 @@ metadata:
   name: gopoc-app1-nginx
   labels:
     app.kubernetes.io/name: nginx
-    helm.sh/chart: nginx-8.8.4
+    helm.sh/chart: nginx-8.9.0
     app.kubernetes.io/instance: gopoc-app1
     app.kubernetes.io/managed-by: Helm
+  annotations:
+    prometheus.io/port: '9113'
+    prometheus.io/scrape: "true"
 spec:
   type: ClusterIP
   ports:
     - name: http
       port: 80
       targetPort: http
+    - name: metrics
+      port: 9113
+      targetPort: metrics
   selector:
     app.kubernetes.io/name: nginx
     app.kubernetes.io/instance: gopoc-app1
