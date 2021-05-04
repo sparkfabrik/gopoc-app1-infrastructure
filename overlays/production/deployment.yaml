@@ -7,5 +7,5 @@ spec:
   template:
     spec:
       containers:
-        - name: nginx
-          image: docker.io/aypx/gitops-poc-app-1:main # {"$imagepolicy": "flux-system:app-application-1"}
+      - name: nginx
+        image: aypx/gitops-poc-app-1:develop-c287195-1620140504 # {"$imagepolicy": "flux-system:app-application-1"}
