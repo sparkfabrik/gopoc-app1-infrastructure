@@ -8,4 +8,4 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: aypx/gitops-poc-app-1:develop-c287195-1620140504 # {"$imagepolicy": "flux-system:app-application-1"}
+        image: aypx/gitops-poc-app-1:develop-42f5b26-1623757244 # {"$imagepolicy": "flux-system:app-application-1"}
